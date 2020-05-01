@@ -8,9 +8,9 @@ import pandas as pd; import numpy as np; import time; import os; import argparse
 from forex_python.converter import get_rate, get_rates
 import datetime
 
-HSBC_HK = "csv/hsbchk.csv"
-ICBC = "csv/icbc.csv"
-Halifax = "halifax.csv"
+#HSBC_HK = "csv/hsbchk.csv"
+#ICBC = "csv/icbc.csv"
+#Halifax = "halifax.csv"
 
 np.random.seed(0)   # set random seed
 
@@ -82,7 +82,7 @@ class BankAccount:
         # change the date column from string to datetime format
         self.bank_dataframe['Date'] = pd.to_datetime(self.bank_dataframe['Date'])
         self.bank_dataframe['random_ID_all'] = np.random.permutation(self.bank_dataframe.shape[0])
-        self.bank_dataframe['unique_ID'] = np.random.random_integers(low=100000, high=999999, size=len(self.bank_dataframe))
+        self.bank_dataframe['unique_ID'] = np.random.randint(low=100000, high=999999, size=len(self.bank_dataframe))
         return
 
     def sortDataframe(self):
