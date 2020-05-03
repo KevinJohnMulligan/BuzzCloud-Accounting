@@ -6,3 +6,6 @@ The program will take a bank records file and a expense receipts file (both CSV 
 
 
 The CSV files that are used contain sensitive banking data, and will therefore not be uploaded.
+
+
+Note about the use of imperative language in git comments: If applied, this commit will "your subject line here" 
