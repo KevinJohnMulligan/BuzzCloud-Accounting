@@ -1,10 +1,21 @@
-# -----------------------------------------------------------
-# runs double entry checks on banking transactions
-# written by Kevin Mulligan and Roger Lewis
-#
-# -----------------------------------------------------------
+""" -----------------------------------------------------------
+ Runs double entry checks on banking transactions
+ written by Kevin Mulligan and Roger Lewis
 
-import pandas as pd; import numpy as np; import time; import os; import argparse; import shortuuid
+"""
+
+#comment highlighting
+# ? Query
+# TODO
+#! Alert
+# * Hightlight
+
+import pandas as pd
+import numpy as np
+import time
+import os
+import argparse
+import shortuuid
 from forex_python.converter import get_rate, get_rates
 import datetime
 
@@ -50,9 +61,9 @@ def getFxRates():
     #self.forex.loc[:, 'GBP']
     GBPUSD = forex['GBP'].values
     date_obj = datetime.datetime(2020, 5, 17)
-    print("date"+ date_obj)
+    # print(date_obj)
     test = get_rate('USD', 'GBP', date_obj)
-    print(test)
+    # print(test)
     return GBPUSD
 
 def getTransactions():
@@ -69,10 +80,11 @@ class BankAccount:
     def __init__(self, bank_name):
         self.bank_name = bank_name
         self.bank_csv_file = 'csv/'+ bank_name + '.csv'
-        print("bankacc init")
-        print(self)
+        # print("bankacc init")
+        # print(self)
         # read csv in from file and store it as a dataframe
         self.bank_dataframe = pd.read_csv('csv/' + self.bank_name + '.csv')
+        self.bank_dataframe = self.bank_dataframe.head(5)
         # fill empty cells with 0
         self.bank_dataframe = self.bank_dataframe.fillna(0)
         # remove duplicates, keep the first instance of a row
@@ -94,7 +106,8 @@ class BankAccount:
         self.bank_dataframe = self.bank_dataframe.reset_index(drop=True)
         return
     def getFirstTransactionDate(self):
-        """get the second row (the first row 0 contains the titles), and return the only the date as a string (not its type)"""
+        """get the second row (the first row 0 contains the titles),
+        and return the only the date as a string (not its type)"""
         return str(self.bank_dataframe.head(1)['Date'])[4:14]
 
     def getLastTransactionDate(self):
@@ -105,6 +118,27 @@ class BankAccount:
         shortuuid.set_alphabet("0123456789")
         return shortuuid.random(length=10)
 
+class receipt():
+    def __init__(self, receipt_name):
+        self.receipt_name = receipt_name
+        self.receipt_csv_file = 'csv/'+ receipt_name + '.csv'
+        # print("bankacc init")
+        # print(self)
+        # read csv in from file and store it as a dataframe
+        self.receipt_dataframe = pd.read_csv('csv/' + self.receipt_name + '.csv')
+        self.receipt_dataframe = self.receipt_dataframe.head(5)
+        # fill empty cells with 0
+        self.receipt_dataframe = self.receipt_dataframe.fillna(0)
+        # remove duplicates, keep the first instance of a row
+        self.receipt_dataframe = self.receipt_dataframe.drop_duplicates(  subset=None,
+                                                                    keep='first',
+                                                                    inplace=False)
+        # change the date column from string to datetime format
+        self.receipt_dataframe['Date'] = pd.to_datetime(self.receipt_dataframe['Date'])
+        # self.receipt_dataframe['random_ID_all'] = np.random.permutation(self.receipt_dataframe.shape[0])
+        self.receipt_dataframe['unique_ID'] = np.random.randint(low=100000,
+                                                                high=999999,
+                                                                size=len(self.receipt_dataframe))
 
 def promptReconciled():
     return
@@ -120,13 +154,11 @@ halifax_obj.sortDataframe()
 hsbc_hk_obj = BankAccount("hsbchk")
 hsbc_hk_obj.sortDataframe()
 
+receipt_obj = receipt("kevin_example_precoded_bank_statement")
+# print(receipt_obj)
 print(halifax_obj.bank_dataframe.tail(5))
 print(hsbc_hk_obj.bank_dataframe.tail(5))
-print("\nfirst transaction date")
-print(hsbc_hk_obj.getFirstTransactionDate())
-print("last transaction date")
-print(hsbc_hk_obj.getLastTransactionDate())
+print("\nfirst transaction date:  " + str(hsbc_hk_obj.getFirstTransactionDate()))
+print("last transaction date:   " + str(hsbc_hk_obj.getLastTransactionDate()))
 
-print(hsbc_hk_obj.assignUniqueID())
-#
-#
+# print(hsbc_hk_obj.assignUniqueID())
